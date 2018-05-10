@@ -8,7 +8,17 @@ ERRORS = {
     'mfnumber_dec_point': u'Malformed number (no digits after decimal point).',
     'mfnumber_sci': u'Malformed number (bad scientific format).',
 }
+# Python 3 renamed the unicode type to str,
+# the old str type has been replaced by bytes
+try:
+    basestring
+except NameError:
+    basestring = str
 
+try:
+    unicode
+except NameError:
+    unicode = str
 
 class ParseError(Exception):
     pass
@@ -129,7 +139,7 @@ class SLPP(object):
                     if self.ch != end:
                         s += '\\'
                 s += self.ch
-        print(ERRORS['unexp_end_string'])
+        raise Exception(ERRORS['unexp_end_string'])
 
     def object(self):
         o = {}
@@ -181,7 +191,7 @@ class SLPP(object):
                             o[idx] = k
                         idx += 1
                         k = None
-        print (ERRORS['unexp_end_table']) #Bad exit here
+        raise Exception(ERRORS['unexp_end_table']) #Bad exit here
 
     words = {'true': True, 'false': False, 'nil': None}
     def word(self):
